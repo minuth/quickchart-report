@@ -1,6 +1,9 @@
 name: 'build-test'
 on: # rebuild any PRs and main branch changes
+  issues:
   pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
@@ -19,6 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ./
         with:
-          milliseconds: 1000
+          ref: main
+      - uses: ./

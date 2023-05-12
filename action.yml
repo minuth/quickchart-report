@@ -2,10 +2,27 @@ name: 'Your name here'
 description: 'Provide a description here'
 author: 'Your name or organization here'
 inputs:
-  milliseconds: # change this
-    required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+  token:
+    description: >
+      Personal access token (PAT) used to fetch the repository. The PAT is configured
+      with the local git config, which enables your scripts to run authenticated git
+      commands.
+      [Learn more about creating and using encrypted secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
+    default: ${{ github.token }}
 runs:
-  using: 'node16'
-  main: 'dist/index.js'
+  using: 'composite'
+  steps:
+    - uses: minuth/report-action@main
+      id: report_action
+      with:
+        token: ${{inputs.token}}
+    - name: generate the chart image
+      shell: bash
+      run: node ./dist/index.js '${{steps.report_action.outputs.report}}'
+    - name: commit & push generated chart
+      uses: actions-js/push@master
+      with:
+        author_email: chart-report-action@noreply.github.com
+        author_name: chart-report-action
+        github_token: ${{inputs.token}}
+        message: 'generate chart'
