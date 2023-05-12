@@ -25,3 +25,5 @@ jobs:
         with:
           ref: main
       - uses: ./
+        with:
+          token: ${{secrets.TOKEN}}
