@@ -1,29 +1,24 @@
-import {wait} from '../src/wait'
-import * as process from 'process'
-import * as cp from 'child_process'
-import * as path from 'path'
 import {expect, test} from '@jest/globals'
+import {BarChartService} from '../src/service'
+import {RepositoryReport} from '../src/model'
+import fs from 'fs'
 
-test('throws invalid number', async () => {
-  const input = parseInt('foo', 10)
-  await expect(wait(input)).rejects.toThrow('milliseconds not a number')
-})
-
-test('wait 500 ms', async () => {
-  const start = new Date()
-  await wait(500)
-  const end = new Date()
-  var delta = Math.abs(end.getTime() - start.getTime())
-  expect(delta).toBeGreaterThan(450)
-})
-
-// shows how the runner will run a javascript action with env / stdout protocol
-test('test runs', () => {
-  process.env['INPUT_MILLISECONDS'] = '500'
-  const np = process.execPath
-  const ip = path.join(__dirname, '..', 'lib', 'main.js')
-  const options: cp.ExecFileSyncOptions = {
-    env: process.env
+test('test generate chart', async () => {
+  const report: RepositoryReport = {
+    openIssues: {totalCount: 100},
+    closedIssues: {totalCount: 60},
+    openPullRequest: {totalCount: 40},
+    closedPullRequest: {totalCount: 130},
+    mergedPullRequest: {totalCount: 50},
+    collaborators: {totalCount: 23},
+    forks: {totalCount: 110},
+    stargazers: {totalCount: 50}
   }
-  console.log(cp.execFileSync(np, [ip], options).toString())
+  const testChartFilePath = './test-chart-report.png'
+  await new BarChartService(report, testChartFilePath).generateChart()
+  const isFileExist = fs.existsSync(testChartFilePath)
+  expect(isFileExist).toBe(true)
+  if (isFileExist) {
+    fs.unlinkSync(testChartFilePath)
+  }
 })
