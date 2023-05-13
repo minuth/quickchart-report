@@ -28,4 +28,3 @@ jobs:
       - uses: ./
         with:
           token: ${{secrets.TOKEN}}
-          file_name: 'chart-report-test'
