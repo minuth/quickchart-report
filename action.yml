@@ -1,6 +1,6 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Quick Chart Report'
+description: 'The github action that use to generate chart image of the repository statistics'
+author: 'Minuth Prom'
 inputs:
   token:
     description: >
@@ -8,7 +8,13 @@ inputs:
       with the local git config, which enables your scripts to run authenticated git
       commands.
       [Learn more about creating and using encrypted secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
-    default: ${{ github.token }}
+    required: true
+  file_path:
+    description: The directory to store chart image. By default it will store at the root directory.
+    default: '.'
+  file_name:
+    description: The file name of chart image and the file extension must be PNG file. By default its name is chart-report.png
+    default: 'chart-report.png'
 runs:
   using: 'composite'
   steps:

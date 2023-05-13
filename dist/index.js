@@ -41,12 +41,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const service_1 = __nccwpck_require__(8881);
+const util_1 = __nccwpck_require__(5063);
 function run(args) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const arg = args[2];
             const { repository } = JSON.parse(arg);
-            const chartService = new service_1.BarChartService(repository);
+            const input = (0, util_1.getInput)();
+            const chartService = new service_1.BarChartService(repository, input.fullFilePath);
             yield chartService.generateChart();
         }
         catch (error) {
@@ -56,6 +58,92 @@ function run(args) {
     });
 }
 run(process.argv);
+
+
+/***/ }),
+
+/***/ 1359:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__nccwpck_require__(1713), exports);
+__exportStar(__nccwpck_require__(734), exports);
+
+
+/***/ }),
+
+/***/ 734:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Input = void 0;
+class Input {
+    constructor(_token, _filePath, _fileName) {
+        this._token = _token;
+        this._filePath = _filePath;
+        this._fileName = _fileName;
+    }
+    get token() {
+        return this._token;
+    }
+    get filePath() {
+        if (this._filePath) {
+            this._filePath = this._filePath.trim();
+            if (this._filePath.endsWith('/')) {
+                return this._filePath.substring(0, this._filePath.length - 1);
+            }
+            return this._filePath;
+        }
+        return '.';
+    }
+    get fileName() {
+        if (this._fileName) {
+            this._fileName = this._fileName.trim();
+            if (!this._fileName.endsWith('.png')) {
+                const indexOfExtension = this._fileName.lastIndexOf('.');
+                if (indexOfExtension < 0) {
+                    return this._fileName.concat('.png');
+                }
+                const fileNameNoExtension = this._fileName.substring(0, indexOfExtension);
+                return fileNameNoExtension.concat('.png');
+            }
+            return this._fileName;
+        }
+        return 'chart-report.png';
+    }
+    get fullFilePath() {
+        return `${this.filePath}/${this.fileName}`;
+    }
+}
+exports.Input = Input;
+
+
+/***/ }),
+
+/***/ 1713:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 
 
 /***/ }),
@@ -78,8 +166,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BarChartService = void 0;
 const fs_1 = __nccwpck_require__(7147);
 const chart_service_1 = __nccwpck_require__(7180);
-class BarChartService extends chart_service_1.BaseChartService {
-    constructor(report, saveChartFilePath = './chart-report.png') {
+class BarChartService extends chart_service_1.QuickChartService {
+    constructor(report, saveChartFilePath) {
         super();
         this.report = report;
         this.saveChartFilePath = saveChartFilePath;
@@ -152,9 +240,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.BaseChartService = void 0;
+exports.QuickChartService = void 0;
 const axios_1 = __importDefault(__nccwpck_require__(8757));
-class BaseChartService {
+class QuickChartService {
     constructor() {
         this.BASE_URL = 'https://quickchart.io/chart';
     }
@@ -171,7 +259,7 @@ class BaseChartService {
         });
     }
 }
-exports.BaseChartService = BaseChartService;
+exports.QuickChartService = QuickChartService;
 
 
 /***/ }),
@@ -223,6 +311,74 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 __exportStar(__nccwpck_require__(274), exports);
+
+
+/***/ }),
+
+/***/ 5063:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__nccwpck_require__(1789), exports);
+
+
+/***/ }),
+
+/***/ 1789:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getInput = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const model_1 = __nccwpck_require__(1359);
+function getInput() {
+    const token = core.getInput('token');
+    const filePath = core.getInput('file_path');
+    const fileName = core.getInput('file_name');
+    return new model_1.Input(token, filePath, fileName);
+}
+exports.getInput = getInput;
 
 
 /***/ }),
