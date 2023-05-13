@@ -1,6 +1,9 @@
 name: 'Quick Chart Report'
 description: 'The github action that use to generate chart image of the repository statistics'
 author: 'Minuth Prom'
+branding:
+  icon: 'activity'
+  color: 'green'
 inputs:
   token:
     description: >
