@@ -48,6 +48,7 @@ function run(args) {
             const arg = args[2];
             const { repository } = JSON.parse(arg);
             const input = (0, util_1.getInput)();
+            core.info(`filePath: ${input.fullFilePath}`);
             const chartService = new service_1.BarChartService(repository, input.fullFilePath);
             yield chartService.generateChart();
         }
