@@ -14,7 +14,7 @@ inputs:
     default: '.'
   file_name:
     description: The file name of chart image and the file extension must be PNG file. By default its name is chart-report.png
-    default: 'chart-report.png'
+    default: 'chart-report_new.png'
 runs:
   using: 'composite'
   steps:
