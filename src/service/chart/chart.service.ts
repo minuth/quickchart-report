@@ -4,7 +4,7 @@ export interface IChartService {
   generateChart(): Promise<void>
 }
 
-export abstract class BaseChartService {
+export abstract class QuickChartService {
   private BASE_URL = 'https://quickchart.io/chart'
 
   protected async downloadChart(chartData: string): Promise<Buffer> {

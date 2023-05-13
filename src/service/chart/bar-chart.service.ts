@@ -1,11 +1,14 @@
 import {writeFileSync} from 'fs'
 import {RepositoryReport} from '../../model'
-import {BaseChartService, IChartService} from './chart.service'
+import {QuickChartService, IChartService} from './chart.service'
 
-export class BarChartService extends BaseChartService implements IChartService {
+export class BarChartService
+  extends QuickChartService
+  implements IChartService
+{
   constructor(
     private report: RepositoryReport,
-    private saveChartFilePath: string = './chart-report.png'
+    private saveChartFilePath: string
   ) {
     super()
   }

@@ -1,6 +1,6 @@
 import {expect, test} from '@jest/globals'
 import {BarChartService} from '../src/service'
-import {RepositoryReport} from '../src/model'
+import {Input, RepositoryReport} from '../src/model'
 import fs from 'fs'
 
 test('test generate chart', async () => {
@@ -21,4 +21,28 @@ test('test generate chart', async () => {
   if (isFileExist) {
     fs.unlinkSync(testChartFilePath)
   }
+})
+
+test('test input with good input', () => {
+  const input = new Input('123456', './report', 'chart-report-test.png')
+  expect(input.token).toEqual('123456')
+  expect(input.filePath).toEqual('./report')
+  expect(input.fileName).toEqual('chart-report-test.png')
+  expect(input.fullFilePath).toEqual('./report/chart-report-test.png')
+})
+
+test('test input with bad input', () => {
+  const input = new Input('123456', './report/', 'chart-report')
+  expect(input.token).toEqual('123456')
+  expect(input.filePath).toEqual('./report')
+  expect(input.fileName).toEqual('chart-report.png')
+  expect(input.fullFilePath).toEqual('./report/chart-report.png')
+})
+
+test('test input with default input', () => {
+  const input = new Input('123456', '.', 'chart-report.png')
+  expect(input.token).toEqual('123456')
+  expect(input.filePath).toEqual('.')
+  expect(input.fileName).toEqual('chart-report.png')
+  expect(input.fullFilePath).toEqual('./chart-report.png')
 })
