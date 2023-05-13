@@ -29,3 +29,4 @@ jobs:
         with:
           token: ${{secrets.TOKEN}}
           file_name: 'chart-report-test'
+          file_path: './test-report'
