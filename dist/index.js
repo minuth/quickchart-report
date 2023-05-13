@@ -38,18 +38,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const service_1 = __nccwpck_require__(8881);
 const util_1 = __nccwpck_require__(5063);
+const fs_1 = __importDefault(__nccwpck_require__(7147));
 function run(args) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const arg = args[2];
             const { repository } = JSON.parse(arg);
-            core.info(`token: ${core.getInput('token')}, path: ${core.getInput('file_path')}, file:${core.getInput('file_name')}`);
             const input = (0, util_1.getInput)();
-            core.info(`filePath: ${input.fullFilePath}`);
+            if (input.filePath &&
+                input.filePath !== '.' &&
+                !fs_1.default.existsSync(input.filePath)) {
+                fs_1.default.mkdirSync(input.filePath);
+            }
             const chartService = new service_1.BarChartService(repository, input.fullFilePath);
             yield chartService.generateChart();
         }
