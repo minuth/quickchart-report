@@ -1,0 +1,38 @@
+name: 'Quick Chart Report'
+description: 'The github action that use to generate chart image of the repository statistics'
+author: 'Minuth Prom'
+inputs:
+  token:
+    description: >
+      Personal access token (PAT) used to fetch the repository. The PAT is configured
+      with the local git config, which enables your scripts to run authenticated git
+      commands.
+      [Learn more about creating and using encrypted secrets](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/creating-and-using-encrypted-secrets)
+    required: true
+  file_path:
+    description: The directory to store chart image. By default it will store at the root directory.
+    default: '.'
+  file_name:
+    description: The file name of chart image and the file extension must be PNG file. By default its name is chart-report.png
+    default: 'chart-report.png'
+runs:
+  using: 'composite'
+  steps:
+    - uses: minuth/report-action@main
+      id: report_action
+      with:
+        token: ${{inputs.token}}
+    - name: generate the chart image
+      shell: bash
+      env:
+        INPUT_TOKEN: ${{inputs.token}}
+        INPUT_FILE_PATH: ${{inputs.file_path}}
+        INPUT_FILE_NAME: ${{inputs.file_name}}
+      run: node ./dist/index.js '${{steps.report_action.outputs.report}}'
+    - name: commit & push generated chart
+      uses: actions-js/push@master
+      with:
+        author_email: chart-report-action@noreply.github.com
+        author_name: chart-report-action
+        github_token: ${{inputs.token}}
+        message: 'generate chart'
