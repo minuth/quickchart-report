@@ -24,6 +24,10 @@ runs:
         token: ${{inputs.token}}
     - name: generate the chart image
       shell: bash
+      env:
+        INPUT_TOKEN: ${{inputs.token}}
+        INPUT_FILE_PATH: ${{inputs.file_path}}
+        INPUT_FILE_NAME: ${{inputs.file_name}}
       run: node ./dist/index.js '${{steps.report_action.outputs.report}}'
     - name: commit & push generated chart
       uses: actions-js/push@master
