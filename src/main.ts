@@ -9,6 +9,7 @@ async function run(args: string[]): Promise<void> {
     type GithubReport = {repository: RepositoryReport}
     const {repository} = JSON.parse(arg) as GithubReport
     const input = getInput()
+    core.info(`filePath: ${input.fullFilePath}`)
     const chartService = new BarChartService(repository, input.fullFilePath)
     await chartService.generateChart()
   } catch (error) {
